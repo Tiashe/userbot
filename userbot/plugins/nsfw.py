@@ -1,6 +1,6 @@
 import os
 from userbot import UserBot
-from pyrogram import Client, Filters
+from pyrogram import Client, Filters, Message
 
 import PIL.Image as Image
 from nsfw import classify
