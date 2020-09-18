@@ -1,15 +1,16 @@
 import aiohttp
 
 
-async def get_latest():
-    async with aiohttp.ClientSession() as session:
-        async with session.get("https://api.spacexdata.com/v3/launches/latest") as resp:
-            data = await resp.json()
-    return data
+class Spacex:
+    @staticmethod
+    async def get(latest_or_next):
+        async with aiohttp.ClientSession() as session:
+            async with session.get(f"https://api.spacexdata.com/v3/launches/{latest_or_next}") as resp:
+                data = await resp.json()
+        return data
 
+    async def latest(self):
+        return await self.get('latest')
 
-async def get_next():
-    async with aiohttp.ClientSession() as session:
-        async with session.get("https://api.spacexdata.com/v3/launches/next") as resp:
-            data = await resp.json()
-    return data
+    async def next(self):
+        return await self.get('next')
