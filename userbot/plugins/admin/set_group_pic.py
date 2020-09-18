@@ -1,13 +1,14 @@
 import asyncio
 
-from pyrogram import Filters, Message
-from pyrogram.client.methods.chats.get_chat_members import Filters as ChatMemberFilters
+from pyrogram import filters
+from pyrogram.methods.chats.get_chat_members import Filters as ChatMemberFilters
+from pyrogram.types import Message
 
 from userbot import UserBot
 from userbot.plugins.help import add_command_help
 
 
-@UserBot.on_message(Filters.command('setpic', '.') & Filters.me)
+@UserBot.on_message(filters.command('setpic', '.') & filters.me)
 async def set_picture(_, message: Message):
     # First of all check if its a group or not
     if message.chat.type in ['group', 'supergroup']:
@@ -18,13 +19,15 @@ async def set_picture(_, message: Message):
 
         # If you are an admin
         if me.id in admin_ids:
+
+            my_permissions = None
             # Fetch your permissions
             for user in admins:
                 if user.user.id == me.id:
                     my_permissions = user
 
             # If you can change group photo
-            if my_permissions.can_change_info:
+            if my_permissions and my_permissions.can_change_info:
                 # If you replied to a message and it has a photo
                 if message.reply_to_message and message.reply_to_message.media:
                     file_id = message.reply_to_message.photo.file_id

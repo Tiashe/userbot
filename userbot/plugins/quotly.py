@@ -1,13 +1,14 @@
+import asyncio
 import random
 from asyncio import sleep
 
-from pyrogram import Filters, Message
-
+from pyrogram import filters
+from pyrogram.types import Message
 from userbot import UserBot
 from userbot.plugins.help import add_command_help
 
 
-@UserBot.on_message(Filters.me & Filters.command(["q"], '.'))
+@UserBot.on_message(filters.me & filters.command(["q"], '.'))
 async def quotly(_, message: Message):
     if not message.reply_to_message:
         await message.edit("Reply to any users text message")
@@ -28,9 +29,11 @@ async def quotly(_, message: Message):
                 await message.edit("```Making a Quote```\nProcessing {}%".format(progress))
             except:
                 await message.edit("ERROR SUUUU")
-    await message.edit("```Complete !```")
-    msg_id = msg[0]["message_id"]
-    await UserBot.forward_messages(message.chat.id, "@QuotLyBot", msg_id)
+    if msg_id := msg[0]['message_id']:
+        await asyncio.gather(
+            message.delete(),
+            UserBot.forward_messages(message.chat.id,"@QuotLyBot", msg_id)
+        )
 
 
 # Command help section

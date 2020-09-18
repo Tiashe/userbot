@@ -1,5 +1,5 @@
-from pyrogram import Filters, Message
-
+from pyrogram import filters
+from pyrogram.types import Message
 from userbot import UserBot
 from userbot.plugins.help import add_command_help
 
@@ -7,7 +7,7 @@ dhivehi_text_memes = {
     'bidi': {'meme': "🚬", 'help': 'Bidi'},
     '100': {'meme': "💯", 'help': '💯'},
     'kada': {'alts': ['k'], 'meme': "ކަޑަ؟", 'help': "ކަޑަ؟"},
-    'blk': {'alts': ['b'], 'meme': "ބަލާކޭ", 'help': "ބަލާކޭ"},
+    'blk': {'alts': ['b'], 'meme': "ބަލާކޭ", 'help': 'ޭބަލާކ'},
     'gerey': {'alts': ['g'], 'meme': "ގެރޭ", 'help': "ގެރޭ"},
     'ngb': {'alts': ['n'], 'meme': "ނަގޫބަޅާ", 'help': "ނަގޫބަޅާ"},
     'amf': {'alts': ['a'], 'meme': "އަމާފޫޅު", 'help': "އަމާފޫޅު"},
@@ -31,9 +31,12 @@ for dv in dhivehi_text_memes:
     fixed_memes_help.append([command, dhivehi_text_memes[dv]['help']])
 
 
-@UserBot.on_message(Filters.command(dhivehi_text_memes_commands, ".") & Filters.me)
+@UserBot.on_message(filters.command(dhivehi_text_memes_commands, ".") & filters.me)
 async def dhivehi_memes(_, message: Message):
     cmd = message.command[0]
+
+    meme = None
+
     if cmd not in dhivehi_text_memes:
         for x in dhivehi_text_memes:
             if 'alts' in dhivehi_text_memes[x] and cmd in dhivehi_text_memes[x]['alts']:
@@ -42,7 +45,8 @@ async def dhivehi_memes(_, message: Message):
     else:
         meme = dhivehi_text_memes[message.command[0]]
 
-    await message.edit(meme['meme'])
+    if meme:
+        await message.edit(meme['meme'])
 
 
 # Command help section
